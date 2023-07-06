@@ -16,7 +16,7 @@ setup(
     author_email="p.altmann@hotmail.de",
     description=("RAAI Module Template for managing different projects for RAAI"),
     license="GPL 3.0",
-    keywords="template",
+    keywords="pygame controller",
     url="https://github.com/vw-wob-it-edu-ngitl/raai_module_template",
     packages=find_packages(),
     long_description=read("README.md"),

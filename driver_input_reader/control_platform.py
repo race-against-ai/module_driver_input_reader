@@ -95,8 +95,8 @@ class DriverInputReader:
 
     def calculate_seat_pivot(self, throttle: float, brake: float) -> float:
         # Pivot is forward tilt
-        if brake == 0 and throttle == 0:
-            pivot = 0
+        if brake == 0.0 and throttle == 0.0:
+            pivot = 0.0
 
         elif throttle > brake:
             pivot = throttle
