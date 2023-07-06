@@ -27,7 +27,7 @@ exe = EXE(
     a.zipfiles,
     a.datas,
     [],
-    name='module_template',
+    name='driver_input_reader',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

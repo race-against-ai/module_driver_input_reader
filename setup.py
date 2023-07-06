@@ -9,11 +9,11 @@ def read(fname):
 
 
 setup(
-    name="raai_module_template",
+    name="raai_module_driver_input_reader",
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     author="NGITl",
-    author_email="your@email.de",
+    author_email="p.altmann@hotmail.de",
     description=("RAAI Module Template for managing different projects for RAAI"),
     license="GPL 3.0",
     keywords="template",

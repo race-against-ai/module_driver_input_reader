@@ -1,9 +1,16 @@
-# RAAI Module Template
-A GitHub Template for creating modular RAAI Components
+# RAAI Module Driver Input Reader
+RAAI Module responsible for Reading Driver Input Data
 
-write your "backend" code in the backend folder. Add a "frontend" if you want to develop frontend
+## Setup
+The Actual Setup will need some sort of controller which Pygame can recognize. More Details can be found in inputs.py <br>
 
-## Stuff to look out for
-- your Information in the setup.py
-- import and execute your main file from the backend folder into the root main.py
-- adjust the pyinstaller.spec according to your project (mainly the name)
+Additional Data like the expected Platform Tilt or Vibration will also be sent over with the Driver Input Data
+
+Either start the module with its Executable or over the main.py
+
+If you need to test another Module dependent on this one, use the ``test_data_send.py`` inside ``driver_input_reader``<br>
+its purpose is to send over faux Platform data over the same pynng address if needed <br>
+
+## Structure
+The Data received from the platform will be sent over the pynng address ``"ipc:///tmp/RAAI/driver_input_reader.ipc"`` 
+with the topic ``"driver_input"``
