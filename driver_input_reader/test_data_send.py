@@ -81,9 +81,9 @@ if __name__ == '__main__':
         pub.listen(PYNNG_PLATFORM_ADDRESS)
         while True:
             send_data(pub, payload, "driver_input ", p_print=True)
-            # payload['throttle'] += 0.5
-            # if payload['throttle'] >= 100:
-            #     payload['throttle'] = 100
+            payload['throttle'] += 0.5
+            if payload['throttle'] >= 100:
+                payload['throttle'] = 100
 
             payload['brake'] += 0.3
             if payload['brake'] >= 100:
