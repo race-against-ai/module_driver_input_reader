@@ -73,11 +73,11 @@ class DriverInputReader:
             velocity = -brake
 
         else:
-            velocity = 0
+            velocity = 10
 
-        lat_acceleration = velocity ** 2 / steering
+        lat_acceleration = velocity ** 2 / (steering/10)
         tilt_angle = math.degrees(math.atan(lat_acceleration / 9.81))
-        return round(-tilt_angle, 2)
+        return round(-tilt_angle, 2)/100
 
     def calculate_rpm(self, throttle: float, brake: float) -> float:
         if throttle >= brake:
@@ -110,7 +110,7 @@ class DriverInputReader:
         self.inputs.read_inputs()
 
         self.platform_info['throttle'] = self.inputs.get_throttle_percent()
-        self.platform_info['brake'] = self.inputs.get_throttle_percent()
+        self.platform_info['brake'] = self.inputs.get_brake_percent()
         self.platform_info['clutch'] = self.inputs.get_clutch_percent()
         self.platform_info['steering'] = self.inputs.get_steering_percent()
 
@@ -144,7 +144,8 @@ class DriverInputReader:
     def send_payload(self):
         """Sends Driver Data over pynng"""
         self.handle_driver_inputs()
-        self.handle_platform_inputs()
+        # Disabled because the tilt was wayy too much
+        # self.handle_platform_inputs()
         send_data(self.publisher, self.platform_info, "driver_input", p_print=True)
 
     def run(self):
