@@ -10,12 +10,19 @@ class ControlWheel:
         UP = 1
         DOWN = 2
 
-    def __init__(self, joystick: pygame.joystick.Joystick, button_up: int, button_down: int, timeout: float = 0.1, change_amount:float = 5.0) -> None:
+    def __init__(
+        self,
+        joystick: pygame.joystick.JoystickType,
+        button_up: int,
+        button_down: int,
+        timeout: float = 0.1,
+        change_amount: float = 5.0,
+    ) -> None:
         self.joystick = joystick
         self.button_up = button_up
         self.button_down = button_down
         self.timeout = timeout
-        self.last_timestamp = 0
+        self.last_timestamp = 0.0
         self.change_amount = change_amount
 
     def get_state(self) -> State:
@@ -35,7 +42,6 @@ class ControlWheel:
 
 
 class Inputs:
-
     def __init__(self):
         self.pedals = None
         self.steer = None
@@ -178,8 +184,7 @@ class Inputs:
     def is_shift_button_right_pressed(self):
         return self.is_button_pressed(23)
 
-    def is_button_pressed(self, button:int):
+    def is_button_pressed(self, button: int):
         if self.buttons:
             return self.buttons.get_button(button)
         return False
-

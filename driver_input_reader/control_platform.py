@@ -41,7 +41,6 @@ def send_data(pub: pynng.Pub0, payload: dict, topic: str = " ", p_print: bool = 
 
 
 class DriverInputReader:
-
     def __init__(self):
         # self.dynamic_platform = DynamicsPlatform()
         self.inputs = Inputs()
@@ -50,13 +49,13 @@ class DriverInputReader:
         self.publisher.listen(PLATFORM_CONTROLLER_PYNNG_ADDRESS)
 
         self.platform_info = {
-            'throttle': 0.0,
-            'brake': 0.0,
-            'clutch': 0.0,
-            'steering': 0.0,
-            'tilt_x': 0.0,
-            'tilt_y': 0.0,
-            'vibration': 0.0
+            "throttle": 0.0,
+            "brake": 0.0,
+            "clutch": 0.0,
+            "steering": 0.0,
+            "tilt_x": 0.0,
+            "tilt_y": 0.0,
+            "vibration": 0.0,
         }
 
     def calculate_seat_tilt(self, throttle: float, brake: float, steering: float) -> float:
@@ -75,9 +74,9 @@ class DriverInputReader:
         else:
             velocity = 10
 
-        lat_acceleration = velocity ** 2 / (steering/10)
+        lat_acceleration = velocity**2 / (steering / 10)
         tilt_angle = math.degrees(math.atan(lat_acceleration / 9.81))
-        return round(-tilt_angle, 2)/100
+        return round(-tilt_angle, 2) / 100
 
     def calculate_rpm(self, throttle: float, brake: float) -> float:
         if throttle >= brake:
@@ -109,27 +108,23 @@ class DriverInputReader:
         """Reads driver inputs via pygame"""
         self.inputs.read_inputs()
 
-        self.platform_info['throttle'] = self.inputs.get_throttle_percent()
-        self.platform_info['brake'] = self.inputs.get_brake_percent()
-        self.platform_info['clutch'] = self.inputs.get_clutch_percent()
-        self.platform_info['steering'] = self.inputs.get_steering_percent()
+        self.platform_info["throttle"] = self.inputs.get_throttle_percent()
+        self.platform_info["brake"] = self.inputs.get_brake_percent()
+        self.platform_info["clutch"] = self.inputs.get_clutch_percent()
+        self.platform_info["steering"] = self.inputs.get_steering_percent()
 
     def handle_platform_inputs(self) -> None:
         """calculates theoretical platform tilt and vibration"""
-        self.platform_info['tilt_x'] = self.calculate_seat_tilt(
-            self.platform_info['throttle'],
-            self.platform_info['brake'],
-            self.platform_info['steering']
+        self.platform_info["tilt_x"] = self.calculate_seat_tilt(
+            self.platform_info["throttle"], self.platform_info["brake"], self.platform_info["steering"]
         )
 
-        self.platform_info['tilt_y'] = self.calculate_seat_pivot(
-            self.platform_info['throttle'],
-            self.platform_info['brake']
+        self.platform_info["tilt_y"] = self.calculate_seat_pivot(
+            self.platform_info["throttle"], self.platform_info["brake"]
         )
 
-        self.platform_info['vibration'] = self.calculate_rpm(
-            self.platform_info['throttle'],
-            self.platform_info['brake']
+        self.platform_info["vibration"] = self.calculate_rpm(
+            self.platform_info["throttle"], self.platform_info["brake"]
         )
 
     # outdated version to update the Platform. will become its own module
@@ -150,4 +145,3 @@ class DriverInputReader:
 
     def run(self):
         self.send_payload()
-
