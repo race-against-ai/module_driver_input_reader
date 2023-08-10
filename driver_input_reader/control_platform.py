@@ -7,11 +7,6 @@ import math
 # from dynamics_platform import DynamicsPlatform
 from driver_input_reader.inputs import Inputs, ControlWheel
 
-CONTROL_PANEL_PYNNG_ADDRESS = "ipc:///tmp/RAAI/control_panel.ipc"
-CONTROL_COMPONENT_PYNNG_ADDRESS = "ipc:///tmp/RAAI/vehicle_output_writer.ipc"
-PLATFORM_CONTROLLER_PYNNG_ADDRESS = "ipc:///tmp/RAAI/driver_input_reader.ipc"
-
-
 def get_change_amount_from_wheel(wheel: ControlWheel) -> float:
     change_amount = wheel.get_change_amount()
     wheel_state = wheel.get_state()
@@ -40,13 +35,49 @@ def send_data(pub: pynng.Pub0, payload: dict, topic: str = " ", p_print: bool = 
     pub.send(msg.encode())
 
 
+def read_config(config_file_path: str) -> dict:
+    if os.path.isfile(config_file_path):
+        with open(config_file_path, 'r') as file:
+            return json.load(file)
+    else:
+        return create_config(config_file_path)
+
+
+def create_config(config_file_path: str) -> dict:
+    """wrote this to ensure that a config file always exists, ports have to be adjusted if necessary"""
+    print("No Config File found, creating new one from Template")
+    print("---!Using default argments for a Config file")
+    template = {
+        "pynng": {
+            "publishers": {
+                "publisher": {
+                    "address": "ipc:///tmp/RAAI/driver_input_reader.ipc",
+                    "topics": {
+                        "driver_input": "driver_input"
+                    }
+                }
+            },
+            "subscribers": {
+            }
+        }
+    }
+
+    file = json.dumps(template, indent=4)
+    with open(config_file_path, 'w') as f:
+        f.write(file)
+
+    return template
+
+
 class DriverInputReader:
-    def __init__(self):
+    def __init__(self, config_file = './driver_input_reader_config.json'):
         # self.dynamic_platform = DynamicsPlatform()
         self.inputs = Inputs()
 
-        self.publisher = pynng.Pub0()
-        self.publisher.listen(PLATFORM_CONTROLLER_PYNNG_ADDRESS)
+        self.config = read_config(config_file)
+        address = self.config["pynng"]["publishers"]["publisher"]["address"]
+        self.publisher = pynng.Pub0(address)
+        self.publisher.listen()
 
         self.platform_info = {
             "throttle": 0.0,
@@ -141,7 +172,8 @@ class DriverInputReader:
         self.handle_driver_inputs()
         # Disabled because the tilt was wayy too much
         # self.handle_platform_inputs()
-        send_data(self.publisher, self.platform_info, "driver_input", p_print=True)
+        topic = self.config["pynng"]["publishers"]["publisher"]["topics"]["driver_input"]
+        send_data(self.publisher, self.platform_info, topic, p_print=True)
 
     def run(self):
         self.send_payload()
