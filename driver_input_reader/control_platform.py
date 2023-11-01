@@ -76,8 +76,8 @@ class DriverInputReader:
 
         self.config = read_config(config_file)
         address = self.config["pynng"]["publishers"]["publisher"]["address"]
-        self.publisher = pynng.Pub0(address)
-        self.publisher.listen()
+        self.publisher = pynng.Pub0()
+        self.publisher.listen(address)
 
         self.platform_info = {
             "throttle": 0.0,
