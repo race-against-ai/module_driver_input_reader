@@ -1,0 +1,14 @@
+{
+  "pynng": {
+    "publishers": {
+      "publisher":{
+        "address": "ipc:///tmp/RAAI/driver_input_reader.ipc",
+        "topics": {
+          "driver_input": "driver_input"
+        }
+      }
+    },
+    "subscribers": {
+    }
+  }
+}
